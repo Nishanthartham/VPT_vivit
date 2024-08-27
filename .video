@@ -1,0 +1,4 @@
+plot_name = VPT-DEEP-SNR-Pretrained-fullDS and pretrained = 10-class-SNR005
+cktp =ckpt-10-class-SNR005
+use 1 gpu cards
+entered

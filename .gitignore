@@ -1,0 +1,12 @@
+__pycache__
+logs
+models
+plots
+sample_images
+temp_transformers
+venv_vivit
+vivit
+vivit_logs
+vivit_rgb
+log-*
+ckpt-10-class-SNR005

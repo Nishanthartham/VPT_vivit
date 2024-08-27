@@ -1,0 +1,61 @@
+11a12
+> import sys
+19,21c20,35
+< train_path = "data_split/simulated_SNR005_train.csv"
+< val_path = "data_split/simulated_SNR005_val.csv"
+< test_path = "data_split/simulated_SNR005_test.csv"
+---
+> pre_trained = sys.argv[1]
+> if pre_trained == 'random':
+>     pass
+> elif pre_trained == 'video':
+>     ckpt = 'google/vivit-b-16x2-kinetics400'
+> elif pre_trained == '10-class-SNR005':
+>     ckpt = 'ckpt-10-class-SNR005'
+> else:
+>     raise 'pre-trained parameter not supported'
+> 
+> 
+> # Use Noble dataset
+> num_classes = 7
+> train_path = "./data_split/train_real_split_0.05.csv"
+> val_path = "./data_split/val_real_split.csv"
+> test_path = "./data_split/test_real_split.csv"
+45c59
+<         for i in range(6):
+---
+>         for i in range(5):
+47,50c61,64
+<                 left = 33*j
+<                 top = 33*i
+<                 right = 33*j+32
+<                 bottom = 33*i+32
+---
+>                 left = 29*j
+>                 top = 29*i
+>                 right = 29*j+28
+>                 bottom = 29*i+28
+53c67
+<                 if count == 32:
+---
+>                 if count == 28:
+55c69,71
+<             if count == 32:
+---
+>             if count == 28:
+>                 for j in range(4):
+>                     video.append(np.array(img.crop((left, top, right, bottom)).resize(self.size)))
+63c79
+<             if s > 0.5:
+---
+>             if s > 0:
+82,83c98,99
+< model = VivitForVideoClassification.from_pretrained("google/vivit-b-16x2-kinetics400", num_labels = 10, ignore_mismatched_sizes=True)
+< if not video_init:
+---
+> model = VivitForVideoClassification.from_pretrained(ckpt, num_labels = num_classes, ignore_mismatched_sizes=True)
+> if pre_trained == 'random':
+105c121
+<     gradient_accumulation_steps=4,
+---
+>     gradient_accumulation_steps=8,

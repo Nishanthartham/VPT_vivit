@@ -1,0 +1,26 @@
+plot_name = VPT-DEEP-SNR-Pretrained-fullDS and pretrained = 10-class-SNR005
+cktp =ckpt-10-class-SNR005
+use 1 gpu cards
+{'loss': 1.377, 'grad_norm': 17.02661895751953, 'learning_rate': 1.9004761904761907e-05, 'epoch': 1.0}
+{'loss': 0.8376, 'grad_norm': 12.790857315063477, 'learning_rate': 1.800952380952381e-05, 'epoch': 2.0}
+{'loss': 0.6852, 'grad_norm': 22.0703067779541, 'learning_rate': 1.701904761904762e-05, 'epoch': 3.0}
+{'loss': 0.6637, 'grad_norm': 18.562030792236328, 'learning_rate': 1.601904761904762e-05, 'epoch': 4.0}
+{'loss': 0.595, 'grad_norm': 19.509347915649414, 'learning_rate': 1.5019047619047619e-05, 'epoch': 5.0}
+{'loss': 0.5416, 'grad_norm': 14.78786563873291, 'learning_rate': 1.401904761904762e-05, 'epoch': 6.0}
+{'loss': 0.4956, 'grad_norm': 13.271444320678711, 'learning_rate': 1.301904761904762e-05, 'epoch': 7.0}
+{'loss': 0.4838, 'grad_norm': 9.940991401672363, 'learning_rate': 1.2019047619047619e-05, 'epoch': 8.0}
+{'loss': 0.4291, 'grad_norm': 24.0216064453125, 'learning_rate': 1.101904761904762e-05, 'epoch': 9.0}
+{'loss': 0.4016, 'grad_norm': 1.2768571376800537, 'learning_rate': 1.001904761904762e-05, 'epoch': 10.0}
+{'loss': 0.3774, 'grad_norm': 13.462186813354492, 'learning_rate': 9.019047619047619e-06, 'epoch': 11.0}
+{'loss': 0.3624, 'grad_norm': 12.727581977844238, 'learning_rate': 8.01904761904762e-06, 'epoch': 12.0}
+{'loss': 0.3771, 'grad_norm': 19.620676040649414, 'learning_rate': 7.0190476190476194e-06, 'epoch': 13.0}
+{'loss': 0.3185, 'grad_norm': 8.072690963745117, 'learning_rate': 6.01904761904762e-06, 'epoch': 14.0}
+{'loss': 0.3086, 'grad_norm': 18.73273468017578, 'learning_rate': 5.019047619047619e-06, 'epoch': 15.0}
+{'loss': 0.2636, 'grad_norm': 18.204261779785156, 'learning_rate': 4.019047619047619e-06, 'epoch': 16.0}
+{'loss': 0.2744, 'grad_norm': 14.459199905395508, 'learning_rate': 3.023809523809524e-06, 'epoch': 17.0}
+{'loss': 0.2265, 'grad_norm': 16.148637771606445, 'learning_rate': 2.023809523809524e-06, 'epoch': 18.0}
+{'loss': 0.2097, 'grad_norm': 0.09649953246116638, 'learning_rate': 1.023809523809524e-06, 'epoch': 19.0}
+{'loss': 0.1996, 'grad_norm': 13.01079273223877, 'learning_rate': 2.3809523809523813e-08, 'epoch': 20.0}
+{'train_runtime': 16767.7456, 'train_samples_per_second': 2.004, 'train_steps_per_second': 0.25, 'train_loss': 0.47140075138637, 'epoch': 20.0}
+accuracy outputs = []
+output = {'test_loss': 0.36536359786987305, 'test_accuracy': 0.8964285714285715, 'test_runtime': 86.8514, 'test_samples_per_second': 6.448, 'test_steps_per_second': 6.448}
