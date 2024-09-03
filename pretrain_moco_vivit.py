@@ -15,7 +15,7 @@ import math
 from pytorch_lightning.loggers import TensorBoardLogger
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 import math
 import torch
 from torch.optim.lr_scheduler import _LRScheduler
@@ -24,13 +24,13 @@ from torch.optim.lr_scheduler import _LRScheduler
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 from torch.utils.data.distributed import DistributedSampler
-from pytorch_lightning.strategies import DeepSpeedStrategy
+# from pytorch_lightning.strategies import DeepSpeedStrategy
 
 # dist.init_process_group("nccl")
 
 # local_rank = int(os.environ["LOCAL_RANK"])
 # global_rank = int(os.environ["RANK"])
-batch_size = 12
+batch_size = 2
 
 class CosineAnnealingWithWarmupLR(_LRScheduler):
     def __init__(self, optimizer, warmup_steps, T_max, eta_min=0, last_epoch=-1, verbose=False):
@@ -97,7 +97,7 @@ class MoCo(pl.LightningModule):
             nn.BatchNorm1d(mlp_dim),
             nn.ReLU(inplace=True),
             nn.Linear(mlp_dim, out_dim, bias=False),
-            nn.BatchNorm1d(out_dim, affine=False)
+            nn.BatchNorm1d(out_dim, affine=False) 
         )
         
         # Build momentum encoder
@@ -248,9 +248,9 @@ class CustomDataset(Dataset):
         return len(self.labels)
 
 
-train_path = '/home/shubham-pg/for-vpt/data_split/train_real_split_0.25.csv'
-val_path = '/home/shubham-pg/for-vpt/data_split/test_real_split.csv'
-test_path = '/home/shubham-pg/for-vpt/data_split/val_real_split.csv'
+train_path = '/shared/home/v_nishanth_artham/local_scratch/CryoET/3d_resnet/data_split/train_real_split.csv'
+val_path = '/shared/home/v_nishanth_artham/local_scratch/CryoET/3d_resnet/data_split/val_real_split.csv'
+test_path = '/shared/home/v_nishanth_artham/local_scratch/CryoET/3d_resnet/data_split/test_real_split.csv'
 
 # Define transformations
 transforms_list = [
@@ -286,15 +286,15 @@ device_ids = [i for i in range(torch.cuda.device_count())]
 
 # model = nn.DataParallel(model, device_ids=device_ids)
 # model = DDP(model, device_ids=[local_rank])
-strategy = DeepSpeedStrategy()
+# strategy = DeepSpeedStrategy()
 trainer = pl.Trainer(
     devices=[0],
     accelerator='cuda',
-    precision="32-true",  # Mixed precision
+    precision="32",  # Mixed precision
     max_epochs=100,
     check_val_every_n_epoch=1,
     logger=logger,
-    strategy=strategy,
+    # strategy=strategy,
     gradient_clip_val=0.5,
     log_every_n_steps=10,
     accumulate_grad_batches=10,

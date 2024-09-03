@@ -1,4 +1,4 @@
-from transformers import VivitImageProcessor, VivitForVideoClassification
+from transformers import VivitImageProcessor, VivitForVideoClassification, PretrainedConfig, VivitConfig
 from sklearn.model_selection import train_test_split
 import torchvision.transforms as transforms
 import torch
@@ -39,19 +39,34 @@ print('use %d gpu cards' % num_gpu)
 
 # Use Noble dataset
 num_classes = 7
-train_path = "./data_split/train_real_split.csv"
-# train_path = "./data_split/train_real_3_shot.csv"
+# train_path = "./data_split/train_real_split.csv"
+train_path = "./data_split/train_real_10_shot.csv"
 # val_path = "./data_split/val_real_split.csv"
-test_path = "./data_split/test_real_split.csv"
-# test_path = "./data_split/test_real_3_shot.csv"
+# test_path = "./data_split/test_real_split.csv"
+test_path = "./data_split/test_real_10_shot.csv"
 
-video_init = True  
+video_init = True
 # vpt = False
 size = (224, 224)
 transforms_list = [
     transforms.RandomResizedCrop(size=size, scale=(0.5, 1)), 
     transforms.RandomAffine(degrees=(-45, 45), translate=(0.1,0.1), scale=(0.9, 1.1))
 ]
+# class prompt_config():
+#     def __init__(self,num_tokens=0,deep=False,vpt=False,transfer_type="end2end"):
+#         this.num_tokens = num_tokens
+#         this.DEEP = deep
+#         this.VPT = vpt
+#         this.transfer_type="prompt"
+
+# cfg = prompt_config(100,True,True,"prompt")
+class CustomConfig(VivitConfig):
+    def __init__(self,config=None):
+        super().__init__()
+        self.prompt_config = config if config is not None else {} 
+
+custom_config = CustomConfig({"num_tokens":200,"DEEP":False,"VPT":True,"transfer_type":"prompt"})
+print(custom_config.prompt_config)
 
 class CustomDataset(Dataset):
     def __init__(self, csv_path, size, transforms_list,num_prompts):
@@ -80,12 +95,11 @@ class CustomDataset(Dataset):
                 if count == 28:
                     break
             if count == 28:
-                # if not vpt:
                 for j in range(4):
                     video.append(np.array(img.crop((left, top, right, bottom)).resize(self.size)))
                 break
         video = np.array(video)
-        # print(f" video shape = {video.shape}")#28,224,224
+        # print(f" video shape = {video.shape}")#32,224,224
         video = (video - video.min())/(video.max() - video.min())
         video = np.stack((video,)*3, axis=1)#(32,3,224,224) -> (35,3,224,224) 
         # print(f"video.shape = {video.shape}")
@@ -95,13 +109,13 @@ class CustomDataset(Dataset):
         #     # print("Applied VPT")
         #     prompts = self.prompts
         #     video = torch.cat((video,prompts),dim=0)#(32,3,224,224)
-        # print(f" video shape after concat = {video.shape}")#28,224,224
-
+        
         for t in self.transforms:
             s = np.random.uniform()
             if s > 0.5:
                 video = t(video)
         # print(f"final video.shape = {video.shape}")
+        # print(f" video shape after concat = {video.shape}")#torch.Size([32, 3, 224, 224])
         
         return video.float(), label
 
@@ -121,9 +135,14 @@ def collate_fn(examples):
     # print(f"torch.stack(pixel_values) = {torch.stack(pixel_values).shape} and {torch.stack(labels)}")
     return {"pixel_values": torch.stack(pixel_values), "labels": torch.stack(labels)}
 
-model = VivitForVideoClassification.from_pretrained(ckpt, num_labels = num_classes, ignore_mismatched_sizes=True)
-# print(f"model config = {model.config}")
-# print(f"type of model config = {type(model.config)}")
+model = VivitForVideoClassification.from_pretrained(ckpt,config=custom_config, ignore_mismatched_sizes=True)
+# model = VivitForVideoClassification.from_pretrained(ckpt, num_labels = num_classes, ignore_mismatched_sizes=True,num_frames=32,tubelet_size=[2, 16, 16])
+print(f"type of model config = {type(model.config)}")
+model.config.num_frames = 1
+model.config.tubelet_size[2] = 1 
+print(f"model config = {model.config}")
+params = sum(v.numel() for v in model.parameters())
+print(f"total number of params = {params}")
 if pre_trained == 'random':
     model = VivitForVideoClassification(model.config)
 
@@ -179,6 +198,7 @@ trainer = Trainer(
     tokenizer=None
     # optimizers=(opt, schd)
 )
+
 
 # train_outputs = trainer.train()
 trainer.train()

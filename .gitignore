@@ -10,3 +10,5 @@ vivit_logs
 vivit_rgb
 log-*
 ckpt-10-class-SNR005
+DeepSpeed/
+tb_logs/
