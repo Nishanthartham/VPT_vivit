@@ -4,13 +4,16 @@
     
 ## Environment settings
 
-1) Use 'requirements.txt` to setup packages in python venv
+2) Use 'requirements.txt` to setup packages in python venv
 
       a) Run command python -m venv venv_vivit (inside VPT_vivit dir)
   
       b) source venv_vivit/bin/activate
   
       c) pip install -r requirements.txt
+
+      d) pip install git+https://github.com/Nishanthartham/transformers.git
+        This uses a custom-designed Vivit model from the transformers package: https://github.com/Nishanthartham/transformers/blob/main/models/vivit/modeling_vivit.py
 
 3) Go to file venv_vivit/lib/python3.10/site-packages/transformers/models/vivit/modeling_vivit.py and replace code from new_modeling_vivit.py to modeling_vivit.py from transformers package.
 
